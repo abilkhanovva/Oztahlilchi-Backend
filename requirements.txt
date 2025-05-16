@@ -1,0 +1,7 @@
+flask
+flask-cors
+python-docx
+PyPDF2
+python-pptx
+rapidfuzz
+beautifulsoup4

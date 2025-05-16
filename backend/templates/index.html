@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>O'zTahlilchi 🧠</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo" title="O'zTahlilchi" role="banner">
+                <svg width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                    <circle cx="32" cy="32" r="30" stroke="url(#grad)" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 10">
+                        <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 32 32" to="360 32 32" dur="4s" repeatCount="indefinite"/>
+                    </circle>
+                    <path d="M20 34 L28 42 L44 26" stroke="#2196F3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#42a5f5"/>
+                            <stop offset="100%" stop-color="#1976d2"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <h1>O'zTahlilchi</h1>
+            </div>
+        </header>
+
+        <main>
+            <div class="text-areas">
+                <section class="input-area" aria-label="Matn kiritish">
+                    <textarea id="textInput" placeholder="Matn kiriting..." aria-required="true"></textarea>
+                    <button id="micButton" type="button" title="Ovoz orqali kirish" aria-label="Mikrofon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                            <path d="M12 14C13.6569 14 15 12.6569 15 11V5C15 3.34315 13.6569 2 12 2C10.3431 2 9 3.34315 9 5V11C9 12.6569 10.3431 14 12 14Z" stroke="#0072FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M19 11C19 14.3137 16.3137 17 13 17H11C7.68629 17 5 14.3137 5 11" stroke="#0072FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <line x1="12" y1="19" x2="12" y2="22" stroke="#0072FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <line x1="8" y1="22" x2="16" y2="22" stroke="#0072FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </section>
+
+                <section class="output-area" aria-label="Tahlil natijasi">
+                    <div id="resultArea" aria-live="polite" aria-atomic="true"></div>
+                    <button id="copyBtn" type="button" title="Natijani nusxalash" aria-label="Natijani nusxalash">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                            <rect x="9" y="9" width="11" height="11" stroke="#0072FF" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M5 15H4C3.44772 15 3 14.5523 3 14V4C3 3.44772 3.44772 3 4 3H14C14.5523 3 15 3.44772 15 4V5" stroke="#0072FF" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </section>
+            </div>
+
+            <div class="buttons">
+                <button id="analyzeBtn" type="button">Tahlil qilish</button>
+            
+                <!-- Fayl yuklash tugmasi (stil bilan) -->
+                <label for="fileUpload" class="custom-file-upload">Fayl yuklash</label>
+                <input type="file" id="fileUpload" accept=".txt, .pdf, .docx, .pptx" style="display: none;">
+            </div>
+                        
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
