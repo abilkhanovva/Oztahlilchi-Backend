@@ -42,19 +42,22 @@ body {
 /* Matn tahlil maydonlari */
 .text-areas {
     display: flex;
+    flex-direction: row; /* Kattaroq ekranlarda yonma-yon */
     gap: 20px;
     margin-bottom: 25px;
-    flex-wrap: wrap; /* kichik ekranlarda joylashishni yaxshilaydi */
+    flex-wrap: wrap;
 }
 
+/* Kirish va chiqish maydonlari */
 .input-area,
 .output-area {
     position: relative;
-    flex: 1 1 100%;
+    flex: 1 1 48%; /* Yonma-yon joylashish uchun */
     display: flex;
     flex-direction: column;
     height: 260px;
-    min-width: 0; /* flex item overflow muammosini hal qiladi */
+    min-width: 280px;
+    box-sizing: border-box;
 }
 
 /* Textarea */
@@ -266,6 +269,7 @@ label[for="fileUpload"]:hover {
 
     .input-area,
     .output-area {
+        width: 100%;
         height: auto;
         min-height: 200px;
         margin-bottom: 20px;
@@ -279,5 +283,20 @@ label[for="fileUpload"]:hover {
 
     .logo h1 {
         font-size: 24px;
+    }
+}
+
+/* Qo'shimcha kichik ekranlar uchun */
+@media (max-width: 480px) {
+    .container {
+        padding: 20px;
+    }
+
+    textarea {
+        font-size: 14px;
+    }
+
+    #resultArea {
+        font-size: 14px;
     }
 }
