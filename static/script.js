@@ -186,10 +186,10 @@ document.addEventListener("DOMContentLoaded", () => {
     function showSuggestions(targetSpan, suggestions) {
         closeSuggestions();
         if (!suggestions.length) return;
-
+    
         const box = document.createElement('div');
         box.className = 'suggestion-box';
-
+    
         suggestions.forEach(sugg => {
             const div = document.createElement('div');
             div.textContent = sugg;
@@ -199,16 +199,20 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             box.appendChild(div);
         });
-
+    
+        // boxni resultArea ichida joylashtiramiz
+        box.style.position = 'absolute';
+    
+        // resultArea position relative bo'lishi kerak CSSda
         const rect = targetSpan.getBoundingClientRect();
         const containerRect = resultArea.getBoundingClientRect();
-
-        box.style.position = 'absolute';
-        box.style.top = (rect.bottom - containerRect.top + window.scrollY) + 'px';
-        box.style.left = (rect.left - containerRect.left + window.scrollX) + 'px';
-
-        document.body.appendChild(box);
-
+    
+        // Taklif oynasini span yoniga aniq joylashtirish:
+        box.style.top = (rect.bottom - containerRect.top) + 'px'; // span ostida
+        box.style.left = (rect.left - containerRect.left) + 'px'; // spanning chap tomoni bo'ylab
+    
+        resultArea.appendChild(box);
+    
         function onClickOutside(e) {
             if (!box.contains(e.target) && e.target !== targetSpan) {
                 closeSuggestions();
@@ -217,8 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         document.addEventListener('click', onClickOutside);
     }
-
-    // Taklif oynasini yopish
+        // Taklif oynasini yopish
     function closeSuggestions() {
         const existing = document.querySelector('.suggestion-box');
         if (existing) existing.remove();
