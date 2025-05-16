@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
-from utils import analyze_text, extract_text_from_file
+from backend.utils import analyze_text, extract_text_from_file
 import os
 
 app = Flask(
