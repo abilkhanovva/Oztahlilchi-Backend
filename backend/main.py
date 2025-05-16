@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 from utils import analyze_text, extract_text_from_file
 import os
 
@@ -8,11 +9,12 @@ app = Flask(
     template_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
 )
 
+CORS(app)  # Frontend bilan o‘zaro ishlash uchun CORS ni yoqamiz
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
-# Matnni tahlil qilish uchun yordamchi funksiya
 def process_text_input(text):
     cleaned_text = text.strip()
     corrected_text, error_words, suggestions_map = analyze_text(cleaned_text)
@@ -45,4 +47,6 @@ def upload_file():
         return jsonify({"error": f"Faylni o‘qishda xatolik: {str(e)}"}), 500
 
 if __name__ == "__main__":
-    app.run(debug=os.environ.get("FLASK_DEBUG", "0") == "1")
+    port = int(os.environ.get("PORT", 5000))
+    debug = os.environ.get("FLASK_DEBUG", "0") == "1"
+    app.run(host="0.0.0.0", port=port, debug=debug)

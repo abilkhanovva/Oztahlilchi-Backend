@@ -6,6 +6,10 @@ from rapidfuzz import process
 from bs4 import BeautifulSoup
 
 def sanitize_for_telegram(html_text: str) -> str:
+    """
+    HTML ichidagi <span class="error-word"> teglarini <b> teglariga almashtiradi.
+    Telegram uchun matnni tayyorlashda ishlatiladi.
+    """
     soup = BeautifulSoup(html_text, "html.parser")
     for span in soup.find_all("span", class_="error-word"):
         new_tag = soup.new_tag("b")
@@ -15,25 +19,37 @@ def sanitize_for_telegram(html_text: str) -> str:
         return str(soup.body.decode_contents())
     return str(soup)
 
-# 📂 Bazani yuklash funksiyasi
 def load_database():
-    base_dir = "C:\\Users\\User\\Desktop\\OzTahlilchi"
+    """
+    So'zlar bazasini fayllardan yuklaydi va yagona to'plamga birlashtiradi.
+    Yo'lni o'zingizga moslab o'zgartiring.
+    """
+    # Agar loyiha strukturasida bo'lsa, __file__ ga nisbatan:
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    # Fayllar asosiy papkada joylashgan bo'lsa, bir pog'ona yuqoriga ko'taring:
+    latin_baza_path = os.path.join(base_dir, "..", "latin_baza.txt")
+    fully_baza_path = os.path.join(base_dir, "..", "fully_baza.txt")
+
     latin = set()
     fully = set()
 
-    with open(os.path.join(base_dir, "latin_baza.txt"), "r", encoding="utf-8") as f:
-        latin.update(word.strip().lower() for word in f)
+    with open(latin_baza_path, "r", encoding="utf-8") as f:
+        latin.update(word.strip().lower() for word in f if word.strip())
 
-    with open(os.path.join(base_dir, "fully_baza.txt"), "r", encoding="utf-8") as f:
-        fully.update(word.strip().lower() for word in f)
+    with open(fully_baza_path, "r", encoding="utf-8") as f:
+        fully.update(word.strip().lower() for word in f if word.strip())
 
     return latin.union(fully)
 
-# 📌 Umumiy baza
+# Umumiy so'zlar bazasi
 DATABASE = load_database()
 
-# 🧠 Matnni tahlil qilish funksiyasi (takliflar optimallashtirilgan)
 def analyze_text(text, max_suggestions=3, similarity_threshold=70, min_length_ratio=0.7):
+    """
+    Matndagi so'zlarni tekshiradi.
+    To'g'ri so'zlar o'z holicha qoladi.
+    Xato so'zlar <span> bilan belgilab, tavsiya so'zlar bilan birga qaytariladi.
+    """
     words = text.strip().replace("\n", " ").split()
     corrected_words = []
     error_words = []
@@ -47,7 +63,6 @@ def analyze_text(text, max_suggestions=3, similarity_threshold=70, min_length_ra
         else:
             error_words.append(clean_word)
 
-            # 10 ta o‘xshash so‘zdan uzunligi mos keladiganlarini tanlab, eng yaxshilarini olib qolamiz
             matches = process.extract(
                 clean_word,
                 DATABASE,
@@ -62,7 +77,7 @@ def analyze_text(text, max_suggestions=3, similarity_threshold=70, min_length_ra
             ][:max_suggestions]
 
             suggestions_map[clean_word] = filtered
-            # HTML orqali noto‘g‘ri so‘zga span qo‘shamiz
+
             safe_suggestions = ",".join(filtered) if filtered else ""
             corrected_words.append(
                 f'<span class="error-word" data-suggestions="{safe_suggestions}">{word}</span>'
@@ -71,8 +86,11 @@ def analyze_text(text, max_suggestions=3, similarity_threshold=70, min_length_ra
     corrected_text = " ".join(corrected_words)
     return corrected_text, error_words, suggestions_map
 
-# 📤 Fayldan matn ajratish funksiyasi
 def extract_text_from_file(file):
+    """
+    Fayldan matn ajratib oladi.
+    Qo'llab-quvvatlanadigan formatlar: txt, docx, pdf, pptx.
+    """
     filename = file.filename
     ext = filename.split(".")[-1].lower()
 
@@ -86,16 +104,22 @@ def extract_text_from_file(file):
 
         elif ext == "pdf":
             reader = PyPDF2.PdfReader(file)
-            return "\n".join(page.extract_text() for page in reader.pages if page.extract_text())
+            texts = []
+            for page in reader.pages:
+                text = page.extract_text()
+                if text:
+                    texts.append(text)
+            return "\n".join(texts)
 
         elif ext == "pptx":
             prs = Presentation(file)
-            text = []
+            texts = []
             for slide in prs.slides:
                 for shape in slide.shapes:
                     if hasattr(shape, "text"):
-                        text.append(shape.text)
-            return "\n".join(text)
+                        texts.append(shape.text)
+            return "\n".join(texts)
+
     except Exception as e:
         print(f"[Xatolik] Faylni o‘qishda muammo: {e}")
 
