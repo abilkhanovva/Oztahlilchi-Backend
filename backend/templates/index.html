@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>O'zTahlilchi 🧠</title>
-    <!-- Statik fayllarni oddiy yo'l bilan ulaymiz -->
-    <link rel="stylesheet" href="static/style.css" />
+    <!-- Statik fayllarni Flask uchun to‘g‘ri ulaymiz -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
     <div class="container">
@@ -63,6 +63,6 @@
         </main>
     </div>
 
-    <script src="static/script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
