@@ -16,7 +16,7 @@ from bs4 import BeautifulSoup
 CHOOSING, CORRECTING = range(2)
 user_sessions = {}
 
-CHANNEL_ID = "@mymanageee"
+CHANNEL_ID = "CHANNEL_ID"
 
 
 def sanitize_for_telegram(html_text: str) -> str:
@@ -234,7 +234,7 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 def main():
-    application = ApplicationBuilder().token("6154659750:AAEr-TpUsp_m6YnoqIm1YU8NHOYhV4kWsuc").build()
+    application = ApplicationBuilder().token("BOT_TOKEN").build()
 
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("start", start)],
