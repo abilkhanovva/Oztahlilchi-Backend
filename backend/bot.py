@@ -12,11 +12,14 @@ from utils import analyze_text
 import docx2txt
 import PyPDF2
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
+
+load_dotenv()
 
 CHOOSING, CORRECTING = range(2)
 user_sessions = {}
 
-CHANNEL_ID = "CHANNEL_ID"
+CHANNEL_ID = os.getenv("CHANNEL_ID")
 
 
 def sanitize_for_telegram(html_text: str) -> str:
@@ -234,7 +237,7 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 def main():
-    application = ApplicationBuilder().token("BOT_TOKEN").build()
+    application = ApplicationBuilder().token(os.getenv("BOT_TOKEN")).build()
 
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("start", start)],
